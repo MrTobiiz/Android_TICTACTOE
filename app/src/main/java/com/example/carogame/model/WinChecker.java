@@ -1,6 +1,4 @@
-package com.example.carogame.logic;
-
-import com.example.carogame.model.Cell;
+package com.example.carogame.model;
 
 public class WinChecker {
 

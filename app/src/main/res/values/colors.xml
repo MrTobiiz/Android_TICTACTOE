@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorX">#E53935</color> <!-- đỏ -->
+    <color name="colorO">#1E88E5</color> <!-- xanh -->
 </resources>

@@ -3,9 +3,11 @@ package com.example.carogame.view.adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.carogame.R;
 import com.example.carogame.databinding.ItemCellBinding;
 import com.example.carogame.model.Cell;
 
@@ -61,8 +63,23 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.CellViewHold
 
         public void bind(final Cell cell, final OnCellClickListener listener) {
 
-            // Hiển thị giá trị X / O
-            binding.tvCell.setText(cell.getValue());
+            String value = cell.getValue();
+            binding.tvCell.setText(value);
+
+            // 🎨 Đổi màu theo X / O
+            if ("X".equals(value)) {
+                binding.tvCell.setTextColor(
+                        binding.getRoot().getContext().getColor(R.color.colorX)
+                );
+            } else if ("O".equals(value)) {
+                binding.tvCell.setTextColor(
+                        binding.getRoot().getContext().getColor(R.color.colorO)
+                );
+            } else {
+                binding.tvCell.setTextColor(
+                        binding.getRoot().getContext().getColor(android.R.color.black)
+                );
+            }
 
             // Click
             binding.getRoot().setOnClickListener(v -> {
@@ -71,5 +88,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.CellViewHold
                 }
             });
         }
+
     }
 }

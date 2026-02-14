@@ -1,4 +1,4 @@
-package com.example.carogame.logic;
+package com.example.carogame.model;
 
 public class GameRule {
 

@@ -1,4 +1,4 @@
-package com.example.carogame.ai;
+package com.example.carogame.model.ai;
 
 import com.example.carogame.model.Cell;
 

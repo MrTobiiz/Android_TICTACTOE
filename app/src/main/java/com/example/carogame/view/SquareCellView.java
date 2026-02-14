@@ -1,4 +1,4 @@
-package com.example.carogame.ui.view;
+package com.example.carogame.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

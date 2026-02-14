@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CaroGame">
         <activity
-            android:name=".ui.activity.GameActivity"
+            android:name=".view.activity.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

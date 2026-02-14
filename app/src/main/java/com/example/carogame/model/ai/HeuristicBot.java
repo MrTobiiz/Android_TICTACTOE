@@ -1,10 +1,8 @@
-package com.example.carogame.ai;
+package com.example.carogame.model.ai;
 
-import com.example.carogame.logic.WinChecker;
+import com.example.carogame.model.WinChecker;
 import com.example.carogame.model.Cell;
 import com.example.carogame.utils.Constants;
-
-import java.util.List;
 
 public class HeuristicBot implements BotPlayer {
 

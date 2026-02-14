@@ -1,14 +1,12 @@
-package com.example.carogame.ui.adapter;
+package com.example.carogame.view.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.carogame.R;
+import com.example.carogame.databinding.ItemMoveHistoryBinding;
 import com.example.carogame.model.Move;
 
 import java.util.List;
@@ -27,9 +25,14 @@ public class MoveHistoryAdapter
     public ViewHolder onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_move_history, parent, false);
-        return new ViewHolder(view);
+        ItemMoveHistoryBinding binding =
+                ItemMoveHistoryBinding.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        parent,
+                        false
+                );
+
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -37,7 +40,8 @@ public class MoveHistoryAdapter
             @NonNull ViewHolder holder, int position) {
 
         Move move = moves.get(position);
-        holder.tvMove.setText(
+
+        holder.binding.tvMove.setText(
                 (position + 1) + ". "
                         + move.getPlayer()
                         + " → (" + move.getRow()
@@ -51,12 +55,12 @@ public class MoveHistoryAdapter
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMove;
 
-        ViewHolder(View itemView) {
-            super(itemView);
-            tvMove = itemView.findViewById(R.id.tvMove);
+        private final ItemMoveHistoryBinding binding;
+
+        ViewHolder(ItemMoveHistoryBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }
-

@@ -31,6 +31,7 @@ public class GameController {
     // PUBLIC API cho View
     // =============================
 
+    // Người chơi click vào ô
     public boolean playHumanMove(int row, int col) {
 
         if (!isPlayerTurn()) return false;
@@ -44,6 +45,7 @@ public class GameController {
         return played;
     }
 
+    //Trạng thái kết thúc
     public boolean isGameOver() {
         return gameState.isGameOver();
     }
@@ -55,6 +57,7 @@ public class GameController {
     public String getWinner() {
         return gameState.getWinner();
     }
+
 
     public List<Cell> getFlatBoard() {
         List<Cell> list = new ArrayList<>();
@@ -79,10 +82,12 @@ public class GameController {
     // PRIVATE LOGIC
     // =============================
 
+
     private boolean playInternal(int row, int col) {
 
         if (gameState.isGameOver()) return false;
 
+        // Kiểm tra xem ô đã được chọn chưa
         Cell cell = gameState.getBoard()[row][col];
         if (!cell.isEmpty()) return false;
 

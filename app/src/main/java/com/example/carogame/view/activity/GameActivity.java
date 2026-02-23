@@ -47,6 +47,8 @@ public class GameActivity extends AppCompatActivity {
         initGame();
     }
 
+
+    //Khởi tạo trò chơi
     private void initGame() {
 
         BotPlayer bot = isBotMode ? new HeuristicBot() : null;
@@ -59,6 +61,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //Tạo nút quay lại và lịch sử
     private void setupButtons() {
 
         binding.btnBack.setOnClickListener(v -> {
@@ -78,6 +81,7 @@ public class GameActivity extends AppCompatActivity {
         );
     }
 
+    //Khởi tạo bảng chơi
     private void setupBoard() {
 
         adapter = new BoardAdapter(
@@ -93,6 +97,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //Xử lý khi người chơi click vào ô
     private void onCellClick(Cell cell) {
 
         boolean moveMade =
@@ -108,6 +113,7 @@ public class GameActivity extends AppCompatActivity {
 
 
 
+    //Cập nhật bảng và trạng thái
     private void updateBoardAndStatus() {
 
         adapter.notifyDataSetChanged();
@@ -129,6 +135,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //Cập nhật trạng thái lượt
     private void updateStatus() {
         binding.tvStatus.setText(
                 "Lượt: " + gameController.getCurrentPlayer()
@@ -136,6 +143,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    //Hiển thị kết quả
     private void showResult(String message) {
         new ResultDialog(
                 this,
@@ -145,6 +153,7 @@ public class GameActivity extends AppCompatActivity {
         ).show();
     }
 
+    //Khởi động lại game
     private void resetGame() {
         gameController.reset();
         adapter.notifyDataSetChanged();

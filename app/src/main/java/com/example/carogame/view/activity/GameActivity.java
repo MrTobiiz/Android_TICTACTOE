@@ -47,18 +47,21 @@ public class GameActivity extends AppCompatActivity {
         initGame();
     }
 
-    private void initGame() {
-        gameController = new GameController(boardSize);
 
-        if (isBotMode) {
-            botPlayer = new HeuristicBot();
-        }
+    //Khởi tạo trò chơi
+    private void initGame() {
+
+        BotPlayer bot = isBotMode ? new HeuristicBot() : null;
+
+        gameController = new GameController(boardSize, isBotMode, bot);
 
         setupButtons();
         setupBoard();
         updateStatus();
     }
 
+
+    //Tạo nút quay lại và lịch sử
     private void setupButtons() {
 
         binding.btnBack.setOnClickListener(v -> {
@@ -78,14 +81,13 @@ public class GameActivity extends AppCompatActivity {
         );
     }
 
+    //Khởi tạo bảng chơi
     private void setupBoard() {
 
-        List<Cell> cellList = new ArrayList<>();
-        for (Cell[] row : gameController.getGameState().getBoard()) {
-            cellList.addAll(Arrays.asList(row));
-        }
-
-        adapter = new BoardAdapter(cellList, this::onCellClick);
+        adapter = new BoardAdapter(
+                gameController.getFlatBoard(),
+                cell -> onCellClick(cell)
+        );
 
         binding.recyclerBoard.setLayoutManager(
                 new GridLayoutManager(this, boardSize)
@@ -94,58 +96,34 @@ public class GameActivity extends AppCompatActivity {
         binding.recyclerBoard.setAdapter(adapter);
     }
 
+
+    //Xử lý khi người chơi click vào ô
     private void onCellClick(Cell cell) {
 
-        if (gameController.getGameState().isGameOver()
-                || (isBotMode &&
-                !gameController.getGameState()
-                        .getCurrentPlayer()
-                        .equals(Constants.PLAYER_X))) {
-            return;
-        }
-
-        boolean moveMade = gameController.play(cell.getRow(), cell.getCol());
+        boolean moveMade =
+                gameController.playHumanMove(
+                        cell.getRow(),
+                        cell.getCol()
+                );
 
         if (moveMade) {
             updateBoardAndStatus();
-
-            if (!gameController.getGameState().isGameOver() && isBotMode) {
-                new Handler(Looper.getMainLooper())
-                        .postDelayed(this::triggerBotMove, 500);
-            }
         }
     }
 
-    private void triggerBotMove() {
 
-        if (gameController.getGameState().isGameOver()
-                || !gameController.getGameState()
-                .getCurrentPlayer()
-                .equals(Constants.PLAYER_O)) {
-            return;
-        }
 
-        Cell botMove = botPlayer.getMove(
-                gameController.getGameState().getBoard(),
-                boardSize
-        );
-
-        if (botMove != null) {
-            gameController.play(botMove.getRow(), botMove.getCol());
-            updateBoardAndStatus();
-        }
-    }
-
+    //Cập nhật bảng và trạng thái
     private void updateBoardAndStatus() {
 
         adapter.notifyDataSetChanged();
 
-        if (gameController.getGameState().isGameOver()) {
+        if (gameController.isGameOver()) {
 
             String message =
-                    gameController.getGameState().getWinner() != null
+                    gameController.getWinner() != null
                             ? "Người chơi "
-                            + gameController.getGameState().getWinner()
+                            + gameController.getWinner()
                             + " thắng!"
                             : "Hòa!";
 
@@ -156,12 +134,16 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+
+    //Cập nhật trạng thái lượt
     private void updateStatus() {
         binding.tvStatus.setText(
-                "Lượt: " + gameController.getGameState().getCurrentPlayer()
+                "Lượt: " + gameController.getCurrentPlayer()
         );
     }
 
+
+    //Hiển thị kết quả
     private void showResult(String message) {
         new ResultDialog(
                 this,
@@ -171,6 +153,7 @@ public class GameActivity extends AppCompatActivity {
         ).show();
     }
 
+    //Khởi động lại game
     private void resetGame() {
         gameController.reset();
         adapter.notifyDataSetChanged();

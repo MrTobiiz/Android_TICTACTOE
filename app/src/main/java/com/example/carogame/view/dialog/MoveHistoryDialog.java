@@ -33,6 +33,11 @@ public class MoveHistoryDialog extends Dialog {
 
         setupRecyclerView();
         setupFullScreen();
+        setupButtons();
+    }
+
+    private void setupButtons(){
+        binding.btnBack.setOnClickListener(v -> dismiss());
     }
 
     private void setupRecyclerView() {

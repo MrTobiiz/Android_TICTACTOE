@@ -24,8 +24,9 @@ public class WinChecker {
     private boolean checkDirection(int r, int c, int dr, int dc, String v) {
         int count = 1;
 
-        count += countCells(r, c, dr, dc, v);
-        count += countCells(r, c, -dr, -dc, v);
+
+        count += countCells(r, c, dr, dc, v);   //Phần được dùng để đếm hướng xui
+        count += countCells(r, c, -dr, -dc, v); //Phần được dùng để đếm hướng ngược
 
         int winCount = GameRule.getWinCount(boardSize);
 

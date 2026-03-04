@@ -7,7 +7,9 @@ public class GameState {
     private final int boardSize;
     private final Cell[][] board;
 
-    private String currentPlayer;
+    private Player playerX;
+    private Player playerO;
+    private Player currentPlayer;
     private String winner;
     private boolean gameOver;
 
@@ -32,7 +34,9 @@ public class GameState {
                 cell.setValue(Constants.EMPTY);
             }
         }
-        currentPlayer = Constants.PLAYER_X;
+        playerX = new Player(Constants.PLAYER_X);
+        playerO = new Player(Constants.PLAYER_O);
+        currentPlayer = playerX;
         winner = null;
         gameOver = false;
     }
@@ -41,14 +45,14 @@ public class GameState {
         return board;
     }
 
+    // Trả về tên hoặc ký hiệu của người chơi hiện tại (String)
     public String getCurrentPlayer() {
-        return currentPlayer;
+        return currentPlayer.getSymbol();
     }
 
+    // Logic đổi lượt chính xác giữa 2 đối tượng Player
     public void switchTurn() {
-        currentPlayer = currentPlayer.equals(Constants.PLAYER_X)
-                ? Constants.PLAYER_O
-                : Constants.PLAYER_X;
+        currentPlayer = (currentPlayer == playerX) ? playerO : playerX;
     }
 
     public boolean isGameOver() {

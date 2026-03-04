@@ -14,4 +14,5 @@ public class Constants {
     // Intent key
     public static final String KEY_BOARD_SIZE = "BOARD_SIZE";
     public static final String KEY_IS_BOT = "IS_BOT";
+
 }

@@ -33,16 +33,22 @@ public class GameController {
 
     // Người chơi click vào ô
     public boolean playHumanMove(int row, int col) {
-
         if (!isPlayerTurn()) return false;
+        return playInternal(row, col);
+    }
 
-        boolean played = playInternal(row, col);
+    // Cho phép gọi từ bên ngoài (ví dụ từ Activity với delay)
+    public void playBotMove() {
+        if (botPlayer == null || gameState.isGameOver()) return;
 
-        if (played && isBotMode && !isGameOver()) {
-            playBotMove();
+        Cell botMove = botPlayer.getMove(
+                gameState.getBoard(),
+                gameState.getBoard().length
+        );
+
+        if (botMove != null) {
+            playInternal(botMove.getRow(), botMove.getCol());
         }
-
-        return played;
     }
 
     //Trạng thái kết thúc
@@ -111,24 +117,9 @@ public class GameController {
         return true;
     }
 
-    private void playBotMove() {
-
-        if (botPlayer == null) return;
-
-        Cell botMove = botPlayer.getMove(
-                gameState.getBoard(),
-                gameState.getBoard().length
-        );
-
-        if (botMove != null) {
-            playInternal(botMove.getRow(), botMove.getCol());
-        }
-    }
-
     private boolean isPlayerTurn() {
         return !gameState.isGameOver() &&
-                (!isBotMode ||
-                        gameState.getCurrentPlayer().equals(Constants.PLAYER_X));
+                (!isBotMode || gameState.getCurrentPlayer().equals(Constants.PLAYER_X));
     }
 
     private boolean isDraw() {

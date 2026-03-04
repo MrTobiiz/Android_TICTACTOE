@@ -18,34 +18,36 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        setupButtons();
+        initViews();
     }
 
+    private void initViews(){
+        setupNumberPicker();
+        setupButtons();
+    }
     private void setupButtons() {
 
         setupButton(binding.btn3x3, 3);
         setupButton(binding.btn6x6, 6);
         setupButton(binding.btn9x9, 9);
         setupButton(binding.btn10x10, 10);
-        setupCustomButton();
+        setupCustombutton();
     }
 
-    private void setupCustomButton(){
-        binding.btnCustom.setOnClickListener(v -> {
-            String input = binding.edtCustomSize.getText().toString().trim();
-            if (input.isEmpty()) {
-                binding.edtCustomSize.setError("Vui lòng nhập kích thước");
-                return;
-        }
-            int boardSize = Integer.parseInt(input);
-            if (boardSize < 3 || boardSize > 20) {
-                binding.edtCustomSize.setError("Chỉ từ 3 đến 20");
-                return;
-            }
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra(Constants.KEY_BOARD_SIZE, boardSize);
-            intent.putExtra(Constants.KEY_IS_BOT, binding.switchBot.isChecked());
+    //Hàm xử lý việc nhập số lượng ô cờ muốn chơi
+    private void setupNumberPicker(){
+        binding.numberPickerSize.setMinValue(3);
+        binding.numberPickerSize.setMaxValue(12);
+        binding.numberPickerSize.setValue(3); //số mặc định lúc đầu
+        binding.numberPickerSize.setWrapSelectorWheel(true); //làm cho khi ta cuộn xuống cuối sẽ quay lại đầu VD: 12 -> 3
+    }
+
+    private void setupCustombutton(){
+        binding.btnCustom.setOnClickListener(v ->{
+            int boardSize = binding.numberPickerSize.getValue();
+            Intent intent = new Intent(this,GameActivity.class);
+            intent.putExtra(Constants.KEY_BOARD_SIZE,boardSize);
+            intent.putExtra(Constants.KEY_IS_BOT,binding.switchBot.isChecked());
             startActivity(intent);
         });
     }

@@ -37,7 +37,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ✅ ViewBinding thay cho setContentView(R.layout...)
+        // ViewBinding thay cho setContentView(R.layout...)
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -51,9 +51,9 @@ public class GameActivity extends AppCompatActivity {
     //Khởi tạo trò chơi
     private void initGame() {
 
-        BotPlayer bot = isBotMode ? new HeuristicBot() : null;
+        botPlayer = isBotMode ? new HeuristicBot() : null;
 
-        gameController = new GameController(boardSize, isBotMode, bot);
+        gameController = new GameController(boardSize, isBotMode, botPlayer);
 
         setupButtons();
         setupBoard();
@@ -81,14 +81,15 @@ public class GameActivity extends AppCompatActivity {
         );
     }
 
-    //Khởi tạo bảng chơi
+    //Khởi tạo bàn cờ
     private void setupBoard() {
-
+        //truyền dữ liệu bàn cờ vào adapter và truyền sự kiện click vào ô
         adapter = new BoardAdapter(
                 gameController.getFlatBoard(),
                 cell -> onCellClick(cell)
         );
 
+        //Chia RecyclerView thành dạng lưới
         binding.recyclerBoard.setLayoutManager(
                 new GridLayoutManager(this, boardSize)
         );
@@ -99,6 +100,10 @@ public class GameActivity extends AppCompatActivity {
 
     //Xử lý khi người chơi click vào ô
     private void onCellClick(Cell cell) {
+        // Nếu là lượt của Bot hoặc game kết thúc thì không cho bấm
+        if (gameController.isGameOver() || (isBotMode && gameController.getCurrentPlayer().equals(Constants.PLAYER_O))) {
+            return;
+        }
 
         boolean moveMade =
                 gameController.playHumanMove(
@@ -108,9 +113,25 @@ public class GameActivity extends AppCompatActivity {
 
         if (moveMade) {
             updateBoardAndStatus();
+
+            // Nếu đang chơi với máy và máy chưa thắng/hòa
+            if (isBotMode && !gameController.isGameOver()) {
+                // Delay 600ms trước khi Bot đánh
+                new Handler(Looper.getMainLooper()).postDelayed(this::triggerBotMove, 600);
+            }
         }
     }
 
+    private void triggerBotMove() {
+        if (gameController.isGameOver()) return;
+
+        // Giả sử GameController có hàm thực hiện nước đi của máy
+        // Nếu GameController của bạn tự gọi bot bên trong playHumanMove thì bạn cần tách nó ra
+        // Ở đây tôi giả định bạn có hàm này để điều khiển lượt đi của máy từ Activity
+        gameController.playBotMove();
+
+        updateBoardAndStatus();
+    }
 
 
     //Cập nhật bảng và trạng thái

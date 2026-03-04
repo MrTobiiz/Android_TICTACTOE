@@ -1,5 +1,6 @@
 package com.example.carogame.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -20,14 +21,12 @@ public class MoveHistoryAdapter
         this.moves = moves;
     }
 
+    //Tạo giao diện cho mỗi dòng trong danh sách
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(
-            @NonNull ViewGroup parent, int viewType) {
-
-        ItemMoveHistoryBinding binding =
-                ItemMoveHistoryBinding.inflate(
-                        LayoutInflater.from(parent.getContext()),
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemMoveHistoryBinding binding = ItemMoveHistoryBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
                         parent,
                         false
                 );
@@ -35,6 +34,7 @@ public class MoveHistoryAdapter
         return new ViewHolder(binding);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(
             @NonNull ViewHolder holder, int position) {
@@ -43,9 +43,7 @@ public class MoveHistoryAdapter
 
         holder.binding.tvMove.setText(
                 (position + 1) + ". "
-                        + move.getPlayer()
-                        + " → (" + move.getRow()
-                        + ", " + move.getCol() + ")"
+                        + move.toDisplayString()
         );
     }
 

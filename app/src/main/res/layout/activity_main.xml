@@ -41,17 +41,16 @@
         android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <EditText
-        android:id="@+id/edtCustomSize"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nhập kích thước (3 - 20)"
-        android:inputType="number" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerSize"
+        android:layout_width="wrap_content"
+        android:layout_height="66dp"
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/btnCustom"
-        android:layout_marginTop="8dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Chơi kích thước tùy chỉnh" />

@@ -1,4 +1,10 @@
 package com.example.carogame.view.activity;
+import com.example.carogame.model.data.HistoryDAO;
+import com.example.carogame.model.history.HistoryItem;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -18,14 +24,11 @@ import com.example.carogame.view.dialog.MoveHistoryDialog;
 import com.example.carogame.view.dialog.ResultDialog;
 import com.example.carogame.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class GameActivity extends AppCompatActivity {
 
     private ActivityGameBinding binding;
 
+    private HistoryDAO historyDAO;
     private BoardAdapter adapter;
     private GameController gameController;
     private BotPlayer botPlayer;
@@ -33,35 +36,42 @@ public class GameActivity extends AppCompatActivity {
     private boolean isBotMode;
     private int boardSize;
 
+    // ⏱️ TIMER
+    private Handler timerHandler = new Handler(Looper.getMainLooper());
+    private int seconds = 0;
+    private Runnable timerRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ViewBinding thay cho setContentView(R.layout...)
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         boardSize = getIntent().getIntExtra(Constants.KEY_BOARD_SIZE, 3);
         isBotMode = getIntent().getBooleanExtra(Constants.KEY_IS_BOT, false);
 
+
         initGame();
     }
 
-
-    //Khởi tạo trò chơi
     private void initGame() {
 
         botPlayer = isBotMode ? new HeuristicBot() : null;
 
         gameController = new GameController(boardSize, isBotMode, botPlayer);
+        historyDAO = new HistoryDAO(this);
 
         setupButtons();
         setupBoard();
+        updateGameInfo();   // ⭐ HIỂN THỊ MODE + SIZE
         updateStatus();
+
+        startTimer(); // ⏱️ bắt đầu đếm giờ
     }
 
-
-    //Tạo nút quay lại và lịch sử
+    // ================= BUTTON =================
     private void setupButtons() {
 
         binding.btnBack.setOnClickListener(v -> {
@@ -81,15 +91,14 @@ public class GameActivity extends AppCompatActivity {
         );
     }
 
-    //Khởi tạo bàn cờ
+    // ================= BOARD =================
     private void setupBoard() {
-        //truyền dữ liệu bàn cờ vào adapter và truyền sự kiện click vào ô
+
         adapter = new BoardAdapter(
                 gameController.getFlatBoard(),
-                cell -> onCellClick(cell)
+                this::onCellClick
         );
 
-        //Chia RecyclerView thành dạng lưới
         binding.recyclerBoard.setLayoutManager(
                 new GridLayoutManager(this, boardSize)
         );
@@ -97,27 +106,25 @@ public class GameActivity extends AppCompatActivity {
         binding.recyclerBoard.setAdapter(adapter);
     }
 
-
-    //Xử lý khi người chơi click vào ô
+    // ================= CLICK =================
     private void onCellClick(Cell cell) {
-        // Nếu là lượt của Bot hoặc game kết thúc thì không cho bấm
-        if (gameController.isGameOver() || (isBotMode && gameController.getCurrentPlayer().equals(Constants.PLAYER_O))) {
+
+        if (gameController.isGameOver()
+                || (isBotMode && gameController.getCurrentPlayer().equals(Constants.PLAYER_O))) {
             return;
         }
 
-        boolean moveMade =
-                gameController.playHumanMove(
-                        cell.getRow(),
-                        cell.getCol()
-                );
+        boolean moveMade = gameController.playHumanMove(
+                cell.getRow(),
+                cell.getCol()
+        );
 
         if (moveMade) {
             updateBoardAndStatus();
 
-            // Nếu đang chơi với máy và máy chưa thắng/hòa
             if (isBotMode && !gameController.isGameOver()) {
-                // Delay 600ms trước khi Bot đánh
-                new Handler(Looper.getMainLooper()).postDelayed(this::triggerBotMove, 600);
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(this::triggerBotMove, 600);
             }
         }
     }
@@ -125,29 +132,24 @@ public class GameActivity extends AppCompatActivity {
     private void triggerBotMove() {
         if (gameController.isGameOver()) return;
 
-        // Giả sử GameController có hàm thực hiện nước đi của máy
-        // Nếu GameController của bạn tự gọi bot bên trong playHumanMove thì bạn cần tách nó ra
-        // Ở đây tôi giả định bạn có hàm này để điều khiển lượt đi của máy từ Activity
         gameController.playBotMove();
-
         updateBoardAndStatus();
     }
 
-
-    //Cập nhật bảng và trạng thái
+    // ================= UPDATE =================
     private void updateBoardAndStatus() {
 
         adapter.notifyDataSetChanged();
 
         if (gameController.isGameOver()) {
 
-            String message =
-                    gameController.getWinner() != null
-                            ? "Người chơi "
-                            + gameController.getWinner()
-                            + " thắng!"
-                            : "Hòa!";
+            stopTimer(); // ⏱️ dừng khi kết thúc
 
+            String message = gameController.getWinner() != null
+                    ? "Người chơi " + gameController.getWinner() + " thắng! 🎉"
+                    : "Hòa!";
+
+            saveGameToHistory();
             showResult(message);
 
         } else {
@@ -155,16 +157,84 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-
-    //Cập nhật trạng thái lượt
     private void updateStatus() {
-        binding.tvStatus.setText(
+        binding.tvCurrentPlayer.setText(
                 "Lượt: " + gameController.getCurrentPlayer()
         );
     }
 
+    // ================= GAME INFO =================
+    private void updateGameInfo() {
 
-    //Hiển thị kết quả
+        String mode = isBotMode ? "PVE (AI)" : "PVP";
+
+        binding.tvGameInfo.setText(
+                "Bàn cờ " + boardSize + "x" + boardSize + " - " + mode
+        );
+    }
+
+    // ================= TIMER =================
+    private void startTimer() {
+
+        seconds = 0;
+
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                int minutes = seconds / 60;
+                int sec = seconds % 60;
+
+                String time = String.format("%02d:%02d", minutes, sec);
+
+                binding.tvTimer.setText(time);
+
+                seconds++;
+
+                timerHandler.postDelayed(this, 1000);
+            }
+        };
+
+        timerHandler.post(timerRunnable);
+    }
+
+    private void saveGameToHistory() {
+        android.util.Log.d("TEST", "ĐÃ LƯU SQLITE");
+
+        String mode = isBotMode ? "PVE" : "PVP";
+
+        String dateTime = new SimpleDateFormat(
+                "dd/MM/yyyy HH:mm",
+                Locale.getDefault()
+        ).format(new Date());
+
+        String result = gameController.getWinner() != null
+                ? "Player " + gameController.getWinner() + " thắng"
+                : "Hòa";
+
+        String moves = gameController.getMoveHistory().size() + " nước";
+
+        String duration = seconds + " giây";
+
+        HistoryItem item = new HistoryItem(
+                boardSize + "x" + boardSize,
+                mode,
+                dateTime,
+                "Player X",
+                "Player O",
+                result,
+                moves,
+                duration
+        );
+
+        historyDAO.insert(item);
+    }
+
+    private void stopTimer() {
+        timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    // ================= RESULT =================
     private void showResult(String message) {
         new ResultDialog(
                 this,
@@ -174,10 +244,10 @@ public class GameActivity extends AppCompatActivity {
         ).show();
     }
 
-    //Khởi động lại game
     private void resetGame() {
         gameController.reset();
         adapter.notifyDataSetChanged();
         updateStatus();
+        startTimer(); // reset timer
     }
 }

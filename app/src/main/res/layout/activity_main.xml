@@ -1,66 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="#2196F3"
+    android:gravity="center">
 
+    <!-- Logo/Icon -->
     <TextView
-        android:text="GAME CỜ CARO"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
+        android:id="@+id/tvLogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <!-- Chọn map -->
-    <Button
-        android:id="@+id/btn3x3"
-        android:text="Chơi 3 x 3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btn6x6"
-        android:text="Chơi 6 x 6"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btn9x9"
-        android:text="Chơi 9 x 9"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/btn10x10"
-        android:text="Chơi 10 x 10"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <NumberPicker
-        android:id="@+id/numberPickerSize"
-        android:layout_width="wrap_content"
-        android:layout_height="66dp"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:id="@+id/btnCustom"
-
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chơi kích thước tùy chỉnh" />
+        android:text="⭕❌"
+        android:textSize="80sp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Chế độ chơi -->
-    <Switch
-        android:id="@+id/switchBot"
-        android:text="Chơi với máy (AI)"
-        android:layout_marginTop="24dp"
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvLogo"
+        android:layout_centerHorizontal="true"
+        android:text="TIC TAC TOE"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"/>
 
-</LinearLayout>
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:text="Trò chơi cổ điển"
+        android:textSize="18sp"
+        android:textColor="#E3F2FD"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Loading -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSubtitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:indeterminateTint="#FFFFFF"/>
+
+    <!-- Version -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Version 1.0"
+        android:textSize="12sp"
+        android:textColor="#E3F2FD"
+        android:layout_marginBottom="24dp"/>
+
+</RelativeLayout>

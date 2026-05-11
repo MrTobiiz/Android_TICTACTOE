@@ -1,5 +1,6 @@
 package com.example.carogame.view.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,14 @@ public class MenuActivity extends AppCompatActivity {
         binding.btnHistory.setOnClickListener(v -> {
             startActivity(new Intent(MenuActivity.this, HistoryActivity.class));
         });
+        binding.btnOutofGame.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Thoát ứng dụng?")
+                    .setMessage("Bạn có chắc muốn thoát trò chơi?")
+                    .setPositiveButton("Có", (d, w) -> finishAffinity())
+                    .setNegativeButton("Không", null)
+                    .show();
+        });
     }
 
     private void setupNumberPicker(){
@@ -64,12 +73,11 @@ public class MenuActivity extends AppCompatActivity {
 
     // Hàm chung để chuyển sang GameActivity - Đảm bảo ĐỦ dữ liệu
     private void navigateToGame(int size) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, PlayerActivity.class);
         boolean isBot = binding.switchBot.isChecked();
 
         // Gửi Key đồng bộ sang GameActivity
         intent.putExtra("PLAYER1_NAME", player1Name);
-        intent.putExtra("PLAYER2_NAME", isBot ? "Máy (AI)" : player2Name);
         intent.putExtra("IS_BOT_MODE", isBot);
         intent.putExtra("BOARD_SIZE", size);
 

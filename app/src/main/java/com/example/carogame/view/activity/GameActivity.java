@@ -195,7 +195,7 @@ public class GameActivity extends AppCompatActivity {
     // ================= GAME INFO =================
     private void updateGameInfo() {
 
-        String mode = isBotMode ? "PVE (AI)" : "PVP";
+        String mode = isBotMode ? "PVE (BOT)" : "PVP";
 
         binding.tvGameInfo.setText(
                 "Bàn cờ " + boardSize + "x" + boardSize + " - " + mode

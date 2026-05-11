@@ -36,16 +36,17 @@ public class WinChecker {
     }
 
     private int countCells(int r, int c, int dr, int dc, String v) {
+       //r =1; c=0; dr=0; dc=1
         int count = 0;
-        int nextR = r + dr;
-        int nextC = c + dc;
+        int nextR = r + dr; // 1
+        int nextC = c + dc; // 1
 
         while (isValid(nextR, nextC)) {
             Cell nextCell = board[nextR][nextC];
             if (v.equals(nextCell.getValue())) {
                 count++;
-                nextR += dr;
-                nextC += dc;
+                nextR += dr; // 1 + 0 = 1 => 1 + 0 = 1
+                nextC += dc; // 1 + 1= 2 => 2 + 1 = 3
             } else {
                 break;
             }

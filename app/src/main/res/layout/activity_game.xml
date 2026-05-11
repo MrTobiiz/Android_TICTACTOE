@@ -17,7 +17,7 @@
             android:id="@+id/tvGameTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TIC TAC TOE"
+            android:text="CỜ CARO"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#2196F3"

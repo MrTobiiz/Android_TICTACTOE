@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Đợi 2 giây (2000ms) rồi chuyển qua PlayerActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+            Intent intent = new Intent(MainActivity.this, MenuActivity.class);
             startActivity(intent);
             finish(); // Quan trọng: Kết thúc MainActivity để không quay lại được bằng nút Back
         }, 2000);

@@ -9,7 +9,7 @@
 
     <!-- Title -->
     <TextView
-        android:text="TIC TAC TOE"
+        android:text="CỜ CARO"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#FF00FF"
@@ -70,16 +70,16 @@
     <NumberPicker
         android:id="@+id/numberPickerSize"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="104dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_gravity="center_horizontal"
         android:background="#E0E7FF" />
 
     <!-- Switch -->
     <Switch
         android:id="@+id/switchBot"
-        android:text="Chơi với máy (AI)"
+        android:text="Chơi với máy (BOT)"
         android:textColor="#111827"
         android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
@@ -93,6 +93,15 @@
         android:textSize="18sp"
         android:layout_marginTop="12dp"
         android:backgroundTint="#3F51B5"
+        android:textColor="#FFFFFF"/>
+    <Button
+        android:id="@+id/btnOutofGame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thoát ứng dụng"
+        android:textSize="18sp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#782504"
         android:textColor="#FFFFFF"/>
 
 </LinearLayout>

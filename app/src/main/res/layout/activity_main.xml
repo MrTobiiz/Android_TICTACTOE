@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvLogo"
         android:layout_centerHorizontal="true"
-        android:text="TIC TAC TOE"
+        android:text="CỜ CARO"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"

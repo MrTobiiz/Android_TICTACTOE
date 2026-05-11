@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bắt đầu trò chơi"
+        android:text="Nhập tên người chơi"
         android:textSize="36sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -49,6 +49,15 @@
         android:text="Bắt đầu chơi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#228B22"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"/>
+    <Button
+        android:id="@+id/btnback"
+        android:text="Quay lại"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:backgroundTint="#782504"
         android:textColor="#FFFFFF"
         android:textSize="16sp"/>

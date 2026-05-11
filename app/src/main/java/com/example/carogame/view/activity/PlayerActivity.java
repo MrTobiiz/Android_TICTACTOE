@@ -1,9 +1,12 @@
 package com.example.carogame.view.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,28 +19,59 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        // 1. Khởi tạo binding TRƯỚC
         binding = ActivityPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnchoi.setOnClickListener(v -> {
+        // Nhận cờ từ MenuActivity
+        boolean isBotMode = getIntent().getBooleanExtra("IS_BOT_MODE", false);
 
+        if (isBotMode) {
+            // Ẩn Player2, chỉ nhập Player1
+            binding.Player2.setVisibility(View.GONE);
+        }
+
+
+        binding.btnchoi.setOnClickListener(v -> {
             String p1 = binding.Player1.getText().toString().trim();
             String p2 = binding.Player2.getText().toString().trim();
 
-            if (p1.isEmpty()) p1 = "PLAYER1_NAME";
-            if (p2.isEmpty()) p2 = "PLAYER2_NAME";
+            // Nhận lại dữ liệu từ MenuActivity
+            Intent intentFromMenu = getIntent();
+            int boardSize = intentFromMenu.getIntExtra("BOARD_SIZE", 15);
 
-            // Trong PlayerActivity.java
-            Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra("PLAYER1_NAME", binding.Player1.getText().toString());
-            intent.putExtra("PLAYER2_NAME", binding.Player2.getText().toString());
-            startActivity(intent);
+            if (p1.isEmpty() || (!isBotMode && p2.isEmpty())) {
+                Toast.makeText(this,"Bạn phải nhập tên người chơi!", Toast.LENGTH_SHORT).show();
+                if (p1.isEmpty()) {
+                    binding.Player1.requestFocus();
+                } else {
+                    binding.Player2.requestFocus();
+                }
+            } else {
+                // Nếu là chế độ bot thì gán tên mặc định cho Player2
+                if (isBotMode) {
+                    p2 = "Máy (BOT)";
+                }
+
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra("PLAYER1_NAME", p1);
+                intent.putExtra("PLAYER2_NAME", p2);
+                intent.putExtra("BOARD_SIZE", boardSize);
+                intent.putExtra("IS_BOT_MODE", isBotMode);
+                startActivity(intent);
+                finish();
+            }
         });
+        binding.btnback.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Thoát trận đấu?")
+                    .setMessage("Bạn có chắc muốn quay lại màn hình menu?")
+                    .setPositiveButton("Có", (d, w) -> finish())
+                    .setNegativeButton("Không", null)
+                    .show();
+        });
+
     }
+
 
 
 }
